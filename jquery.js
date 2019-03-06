@@ -7,9 +7,7 @@ $(document).ready(function () {
         });
     });
 
-    innerText = document.getElementById("word").innerText = "Topic 1";
-    innerText = document.getElementById("chord").innerText = "Topic 1";
-    innerText = document.getElementById("scatter").innerText = "Topic 1";
+    document.getElementById("scatter").innerText = document.getElementById("chord").innerText = document.getElementById("word").innerText = "Topic 1";
 
     $("li").on("click", function c(j) {
         document.getElementById("word").innerText = document.getElementById("chord").innerText = document.getElementById("scatter").innerText = document.getElementById(this.id).innerText;
@@ -17,9 +15,43 @@ $(document).ready(function () {
         // document.getElementById("scatter").innerText = document.getElementById(this.id).innerText;
     });
     // function findata(topic_name) {
-    $("li").on("click", function c() {
+
+    function FIND(arr, id) {
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].innerHTML = id) {
+                document.getElementById(`myChart_chord_${id}`).classList.remove("wearehiding");
+                console.log("in", `myChart_chord_${id}`)
+            } else {
+                let chief = document.getElementById(`myChart_chord_${id}`)
+
+                if (chief.childNodes.length > 0) {
+                    chief.removeChild(chief.childNodes[0])
+                }
+
+                document.getElementById(`myChart_chord_${id}`).classList.add("wearehiding")
+                console.log("out", `myChart_chord_${id}`)
+            }
+        }
+        
+    }
+    // 
+
+    $("li").on("click", function c(event) {
         Object.keys(topics).map(topic => {
+            let id = $(this).attr("id")
             if (topic === document.getElementById(this.id).innerText) {
+
+                // let chief=document.getElementById(n)
+
+                // if (chief.childNodes.length>0) {
+                //     chief.removeChild(chief.childNodes[0])
+                // }
+
+                document.getElementById("myChart_chord").classList.add("wearehiding")
+
+                let items = document.querySelectorAll("#myList li")
+                FIND(items, id)
+
 
                 myConfig["series"] = topics[topic][0]["data"]["chord"]
                 myConfig3.options.text = topics[topic][0]["data"]["word"]
@@ -30,12 +62,19 @@ $(document).ready(function () {
                 document.getElementById("p_mentioned").innerText = topics[topic][0]["properties"]["Posts mentioned"]
                 document.getElementById("posting_loc").innerText = topics[topic][0]["properties"]["Posting Location"]
 
-                rerender(myConfig)
-                rerender3(myConfig3)
-                rerender4(myConfig4)
-                console.log(myConfig3["text"])
+
+
+                rerender(myConfig, `myChart_chord_${id}`)
+                rerender(myConfig3, "myChart_word")
+                rerender(myConfig4, "myChart_scatter")
+                // console.log(myConfig3["text"])
 
             }
+            // console.log("work",)
+            // else{
+            // document.getElementById(`myChart_chord_${id}`).classList.add("wearehiding")
+
+            // }
         })
     });
 });
@@ -187,6 +226,15 @@ zingchart.render({
 
 
 
+function rerender(data, id_) {
+    zingchart.render({
+        id: id_,
+        data: data,
+        height: "100%",
+        width: "100%",
+        hideprogresslogo: true
+    });
+}
 
 var myConfig3 = {
     type: 'wordcloud',
@@ -234,17 +282,7 @@ var myConfig3 = {
     }
 };
 
-function rerender3(data) {
-    zingchart.render({
-        id: 'myChart_word',
-        data: data,
-        height: 400,
-        width: '100%',
-        hideprogresslogo: true
-    });
-
-}
-rerender3(myConfig3);
+rerender(myConfig3, "myChart_word");
 
 
 var myConfig4 = {
@@ -338,17 +376,8 @@ var myConfig4 = {
     }
 };
 
-function rerender4(data) {
-    zingchart.render({
-        id: 'myChart_scatter',
-        data: data,
-        height: 400,
-        width: "100%",
-        hideprogresslogo: true,
-    });
 
-}
-rerender4(myConfig4);
+rerender(myConfig4, "myChart_scatter");
 
 
 var myConfig = {
@@ -356,7 +385,7 @@ var myConfig = {
     "options": {
         "radius": "80%",
         "color-type": "palette",
-        "palette": ["#bdbdbd", "#db0000", "#0e441a", "#008fdb","#0e1644"]
+        "palette": ["#bdbdbd", "#db0000", "#0e441a", "#008fdb", "#0e1644"]
     },
     "plotarea": {
         "margin": "dynamic"
@@ -385,17 +414,8 @@ var myConfig = {
         }
     ]
 };
-function rerender(data) {
-    zingchart.render({
-        id: 'myChart_chord',
-        data: data,
-        height: "100%",
-        width: "100%",
-        hideprogresslogo: true
-    });
 
-}
-rerender(myConfig);
+rerender(myConfig, "myChart_chord");
 
 
 function getrand(min, max, leng) {

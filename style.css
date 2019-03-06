@@ -35,3 +35,8 @@ div[id$="myChart_word-license-text"] {
 div[id$="myChart_scatter-license-text"] {
     display: none !important;
 }
+
+.wearehiding{
+    visibility:hidden;
+    display:none;
+}
